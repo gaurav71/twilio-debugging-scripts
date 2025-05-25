@@ -9,22 +9,18 @@ const ACCOUNT_SID = creds.AccountSid;
 const WORKSPACE_SID = creds.WorkspaceSid;
 const client = Twilio(API_KEY, API_SECRET, { accountSid: ACCOUNT_SID });
 
-const startDate = new Date("2024-09-15T00:00:00Z");
-const taskChannel = "voice";
-const eventType = "task.created";
-const searchAll = true;
-
-const attributesToSearch = {
-  skill: "inquiry",
-  market: "DE"
+const searchData = {
+  startDate: new Date("2025-05-01T00:00:00Z"), 
+  taskChannel: "voice",
+  eventType: "task.created",
 }
+
+const searchAll = true;
+const searchAttr = ["CA43XXXXXXXXXXXXXXXXXXXXXXXXX"];
 
 const filterEvents = (events) => {
   return events.filter(({ eventData }) => {
-    const taskAttributes = JSON.parse(eventData.task_attributes || '{}');
-    return Object.keys(attributesToSearch).every((key) => {
-      return attributesToSearch[key] === taskAttributes[key]
-    })
+    return searchAttr.some(attr => eventData.task_attributes.includes(attr));
   });
 }
 
@@ -50,9 +46,7 @@ async function searchEvents() {
   let eventPage = await client.taskrouter.v1.workspaces(WORKSPACE_SID)
     .events
     .page({
-      startDate,
-      ...(taskChannel ? { taskChannel } : {}),
-      eventType,
+      ...searchData,
       pageSize: 1000,
     });
 

@@ -43,7 +43,8 @@ const fetchFunctionExecutionLogs = async ({ serviceSid, environmentSid, function
     .list({
       functionSid,
       startDate,
-      endDate
+      endDate,
+      limit: 1000
     })
 
     return logs
@@ -62,6 +63,8 @@ const runner = async () => {
     environmentSid: environment.sid,
     functionSid: func.sid
   })
+
+  fs.writeFileSync(`${__dirname}/logs.json`, JSON.stringify(logs, null, 2))
 
   console.log(logs)
 }

@@ -1,5 +1,6 @@
 const creds = require('../../../creds').DEV;
 const Twilio = require('twilio');
+const fs = require('fs');
 
 const API_KEY = creds.ApiKey;
 const API_SECRET = creds.ApiSecret;
